@@ -54,6 +54,8 @@ When you run the script, it will guide you through the following steps:
 
 Follow the on-screen prompts to complete the setup process.
 
+*Ensure that you write down your mneumeric seed phrases for both the coldwallet and hotkeys*
+
 ## Support:
 
 If you encounter any issues or have questions regarding the setup process, please reach out to the SubVortex team in their Bittensor Discord channel [SubVortex](https://discord.com/channels/799672011265015819/1215311984799653918)
