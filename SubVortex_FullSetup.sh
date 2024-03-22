@@ -28,20 +28,18 @@ install_subvortex() {
     pip install -e .
 }
 
-# Function to install and start Subtensor
+# Function to install and start Subtensor using pm2
 install_and_start_subtensor() {
     local network=$1
     echo "Installing Local Subtensor on $network"
     countdown 3
-    cd $HOME
-    $HOME/SubVortex/scripts/subtensor/setup.sh $network binary $HOME
-    echo "Starting Local Subtensor..."
+    cd $HOME/SubVortex/scripts/subtensor/
+    ./setup.sh $network binary $HOME
+    echo "Starting Local Subtensor with pm2..."
     countdown 3
-    $HOME/SubVortex/scripts/subtensor/start.sh $network binary $HOME &
-    local subtensor_pid=$!
-    sleep 5
-    kill -SIGINT $subtensor_pid
-    wait $subtensor_pid 2>/dev/null
+    pm2 start ./start.sh --name "subtensor_$network" -- $network binary $HOME
+    pm2 save
+    echo "Subtensor is now running in the background managed by pm2."
 }
 
 # Function to prompt for yes/no
@@ -108,3 +106,5 @@ if prompt_yes_no "Do you want to start miner?"; then
     # Start the miner
     start_miner "$network" "$WALLETNAME" "$HOTKEY" "$MINERNAME"
 fi
+
+# End of script
