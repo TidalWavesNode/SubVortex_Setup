@@ -73,7 +73,7 @@ start_miner() {
     local HOTKEY=$3
     local MINERNAME=$4
     echo "Starting Miner... Remember to Register your hotkey on network $network"
-    countdown 5
+    countdown 7
     cd "$HOME/SubVortex/" || exit
     echo "Creating a new ColdWallet..."
     btcli w new_coldkey
