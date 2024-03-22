@@ -159,7 +159,7 @@ install_and_start_subtensor() {
     ./setup.sh $network_arg binary $HOME
     echo "Starting Local Subtensor with pm2..."
     countdown 3
-    pm2 start start.sh --name "subtensor_$network_arg" -- $network_arg binary $HOME
+    pm2 start start.sh --name subtensor_$network_arg -- $network_arg binary $HOME
     pm2 save
     echo "Subtensor is now running in the background managed by pm2."
 }
