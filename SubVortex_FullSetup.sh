@@ -66,6 +66,18 @@ prompt_yes_no() {
     esac
 }
 
+# Function to create a new ColdWallet
+create_cold_wallet() {
+    echo "Creating a new ColdWallet..."
+    btcli w new_coldkey
+}
+
+# Function to create a new HotKey
+create_hotkey() {
+    echo "Creating a new HotKey..."
+    btcli w new_hotkey
+}
+
 # Function to start the miner
 start_miner() {
     local network=$1
@@ -73,12 +85,8 @@ start_miner() {
     local HOTKEY=$3
     local MINERNAME=$4
     echo "Starting Miner... Remember to Register your hotkey on network $network"
-    countdown 7
+    countdown 5
     cd "$HOME/SubVortex/" || exit
-    echo "Creating a new ColdWallet..."
-    btcli w new_coldkey
-    echo "Creating a new HotKey..."
-    btcli w new_hotkey
     pm2 start neurons/miner.py --name "$MINERNAME" --interpreter python3 -- --netuid "$network" --subtensor.network local --wallet.name "$WALLETNAME" --wallet.hotkey "$HOTKEY" --logging.debug || { echo "Failed to start miner"; exit 1; }
 }
 
@@ -98,12 +106,20 @@ else
     exit 1
 fi
 
-# Prompt for ColdWallet creation
-if prompt_yes_no "Do you want to create a new ColdWallet?"; then
-    # Call start_miner function
-    start_miner "$network"
-fi
+# Prompt for creating a new ColdWallet
+create_cold_wallet
 
-# Prompt for HotKey creation
-if prompt_yes_no "Do you want to create a new HotKey?"; then
-    #
+# Prompt for creating a new HotKey
+create_hotkey
+
+# Prompt for starting miner
+if prompt_yes_no "Do you want to start miner?"; then
+    # Prompt for WALLETNAME
+    read -p "Please enter WALLETNAME: " WALLETNAME
+    # Prompt for HOTKEYNAME
+    read -p "Please enter HOTKEYNAME: " HOTKEY
+    # Prompt for MINERNAME
+    read -p "Please enter miner name: " MINERNAME
+    # Call start_miner function
+    start_miner "$network" "$WALLETNAME" "$HOTKEY" "$MINERNAME"
+fi
