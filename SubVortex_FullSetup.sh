@@ -37,11 +37,7 @@ install_and_start_subtensor() {
     $HOME/SubVortex/scripts/subtensor/setup.sh $network binary $HOME
     echo "Starting Local Subtensor..."
     countdown 3
-    $HOME/SubVortex/scripts/subtensor/start.sh $network binary $HOME &
-    local subtensor_pid=$!
-    sleep 5
-    kill -SIGINT $subtensor_pid
-    wait $subtensor_pid 2>/dev/null
+    $HOME/SubVortex/scripts/subtensor/start.sh $network binary $HOME
 }
 
 # Function to prompt for yes/no
