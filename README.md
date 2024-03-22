@@ -1,8 +1,8 @@
-# SubVortex Full Setup Script
+# SubVortex Full Setup Script:
 
 This repository contains a script designed to automate the installation and setup process for the SubVortex subnet on Bittensor. The script simplifies the process of installing SubVortex, its dependencies, and configuring the Subtensor network (either mainnet or testnet). Additionally, it assists with the creation of a new ColdWallet and HotKey, and provides an easy way to start the miner.
 
-## Purpose of the Script
+## Purpose of the Script:
 
 The `SubVortex_FullSetup.sh` script is intended to:
 
@@ -11,14 +11,14 @@ The `SubVortex_FullSetup.sh` script is intended to:
 - Prompt the user to create a new ColdWallet and HotKey.
 - Prompt the user to start the miner.
 
-## Prerequisites
+## Prerequisites:
 
 Before running the script, ensure that you have:
 
 - A Linux-based operating system with `sudo` privileges.
 - Internet connectivity for downloading necessary packages and cloning the SubVortex repository.
 
-## How to Download and Run the Script
+## How to Download and Run the Script:
 
 Follow these steps to download, make the script executable, and run it:
 
@@ -42,7 +42,7 @@ Follow these steps to download, make the script executable, and run it:
    ./SubVortex_FullSetup.sh
    ```
 
-## Running the Script
+## Running the Script:
 
 When you run the script, it will guide you through the following steps:
 
@@ -54,18 +54,18 @@ When you run the script, it will guide you through the following steps:
 
 Follow the on-screen prompts to complete the setup process.
 
-## Support
+## Support:
 
 If you encounter any issues or have questions regarding the setup process, please reach out to the SubVortex team in their Bittensor Discord channel [SubVortex](https://discord.com/channels/799672011265015819/1215311984799653918)
 
-## Contributions
+## Contributions:
 
 Contributions to the script are welcome. If you have improvements or fixes, please fork the repository, make your changes, and submit a pull request.
 
-## License
+## License:
 
 This script is provided under an open-source license. Please check the repository for the specific license details.
 
-## Disclaimer
+## Disclaimer:
 
 This script is provided "as is", without warranty of any kind. Use at your own risk. Always review scripts and code before running them on your system.
