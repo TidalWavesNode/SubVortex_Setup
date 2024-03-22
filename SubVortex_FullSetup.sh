@@ -37,7 +37,7 @@ install_and_start_subtensor() {
     ./setup.sh $network binary $HOME
     echo "Starting Local Subtensor with pm2..."
     countdown 3
-    pm2 start ./start.sh --name "subtensor_$network" -- $network binary $HOME
+    pm2 start start.sh --name "subtensor_$network" -- $network binary $HOME
     pm2 save
     echo "Subtensor is now running in the background managed by pm2."
 }
@@ -66,6 +66,12 @@ start_miner() {
     pm2 start neurons/miner.py --name "$MINERNAME" --interpreter python3 -- --netuid "$network" --subtensor.network local --wallet.name "$WALLETNAME" --wallet.hotkey "$HOTKEY" --logging.debug
 }
 
+# Define the wallet backup file path
+WALLETBACKUP="$HOME/WALLETBACKUP.txt"
+
+# Clear the WALLETBACKUP file or create it if it doesn't exist
+> "$WALLETBACKUP"
+
 # Main installation process
 install_subvortex
 
@@ -84,12 +90,14 @@ fi
 
 # Prompt for ColdWallet creation
 if prompt_yes_no "Do you want to create a new ColdWallet?"; then
-    btcli w new_coldkey
+    echo "Creating a new ColdWallet..." >> "$WALLETBACKUP"
+    btcli w new_coldkey >> "$WALLETBACKUP"
 fi
 
 # Prompt for HotKey creation
 if prompt_yes_no "Do you want to create a new HotKey?"; then
-    btcli w new_hotkey
+    echo "Creating a new HotKey..." >> "$WALLETBACKUP"
+    btcli w new_hotkey >> "$WALLETBACKUP"
 fi
 
 # Prompt for starting miner
@@ -106,5 +114,3 @@ if prompt_yes_no "Do you want to start miner?"; then
     # Start the miner
     start_miner "$network" "$WALLETNAME" "$HOTKEY" "$MINERNAME"
 fi
-
-# End of script
