@@ -213,13 +213,13 @@ fi
 # Prompt for ColdWallet creation
 if prompt_yes_no "Do you want to create a new ColdWallet?"; then
     echo "Creating a new ColdWallet..." >> "$WALLETBACKUP"
-    btcli w new_coldkey >> "$WALLETBACKUP"
+    btcli w new_coldkey --subtensor.network local >> "$WALLETBACKUP"
 fi
 
 # Prompt for HotKey creation
 if prompt_yes_no "Do you want to create a new HotKey?"; then
     echo "Creating a new HotKey..." >> "$WALLETBACKUP"
-    btcli w new_hotkey >> "$WALLETBACKUP"
+    btcli w new_hotkey --subtensor.network local >> "$WALLETBACKUP"
 fi
 
 # Prompt for starting miner
