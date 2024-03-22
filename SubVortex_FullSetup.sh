@@ -80,7 +80,7 @@ fi
 
 # Prompt for ColdWallet creation
 if prompt_yes_no "Do you want to create a new ColdWallet?"; then
-    btlcli w new_coldkey
+    btcli w new_coldkey
 fi
 
 # Prompt for HotKey creation
