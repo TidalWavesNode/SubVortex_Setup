@@ -37,7 +37,11 @@ install_and_start_subtensor() {
     $HOME/SubVortex/scripts/subtensor/setup.sh $network binary $HOME
     echo "Starting Local Subtensor..."
     countdown 3
-    $HOME/SubVortex/scripts/subtensor/start.sh $network binary $HOME
+    $HOME/SubVortex/scripts/subtensor/start.sh $network binary $HOME &
+    local subtensor_pid=$!
+    sleep 5
+    kill -SIGINT $subtensor_pid
+    wait $subtensor_pid 2>/dev/null
 }
 
 # Function to prompt for yes/no
@@ -54,14 +58,14 @@ prompt_yes_no() {
 
 # Function to start the miner
 start_miner() {
-    local UID=$1
+    local network=$1
     local WALLETNAME=$2
     local HOTKEY=$3
     local MINERNAME=$4
-    echo "Starting Miner...Remember to Register your hotkey on UID# $UID"
+    echo "Starting Miner...Remember to Register your hotkey on network $network"
     countdown 5
     cd $HOME/SubVortex/
-    pm2 start neurons/miner.py --name "$MINERNAME" --interpreter python3 -- --netuid "$UID" --subtensor.network local --wallet.name "$WALLETNAME" --wallet.hotkey "$HOTKEY" --logging.debug
+    pm2 start neurons/miner.py --name "$MINERNAME" --interpreter python3 -- --netuid "$network" --subtensor.network local --wallet.name "$WALLETNAME" --wallet.hotkey "$HOTKEY" --logging.debug
 }
 
 # Main installation process
@@ -70,9 +74,11 @@ install_subvortex
 # Ask for network type
 read -p "Do you want to install subtensor on mainnet or testnet? " network_type
 if [ "$network_type" == "mainnet" ]; then
-    install_and_start_subtensor mainnet
+    network="XX" # Replace XX with the actual UID for mainnet when known
+    install_and_start_subtensor "$network"
 elif [ "$network_type" == "testnet" ]; then
-    install_and_start_subtensor testnet
+    network="92"
+    install_and_start_subtensor "$network"
 else
     echo "Invalid network type selected."
     exit 1
@@ -90,9 +96,6 @@ fi
 
 # Prompt for starting miner
 if prompt_yes_no "Do you want to start miner?"; then
-    # Prompt for UID
-    echo "Please enter UID (Testnet = 92, Mainnet = XX): "
-    read UID
     # Prompt for WALLETNAME
     echo "Please enter WALLETNAME: "
     read WALLETNAME
@@ -103,5 +106,5 @@ if prompt_yes_no "Do you want to start miner?"; then
     echo "Please enter miner name: "
     read MINERNAME
     # Start the miner
-    start_miner "$UID" "$WALLETNAME" "$HOTKEY" "$MINERNAME"
+    start_miner "$network" "$WALLETNAME" "$HOTKEY" "$MINERNAME"
 fi
