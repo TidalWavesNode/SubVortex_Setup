@@ -15,7 +15,7 @@ install_subvortex() {
     echo "Installing SubVortex"
     countdown 3
     sudo apt update && sudo apt upgrade -y || { echo "Failed to update packages"; exit 1; }
-    sudo apt install git nodejs npm expect -y || { echo "Failed to install required packages"; exit 1; }
+    sudo apt install git nodejs npm -y || { echo "Failed to install required packages"; exit 1; }
     sudo npm i -g pm2 || { echo "Failed to install pm2"; exit 1; }
     sudo apt install python3-pip -y || { echo "Failed to install python3-pip"; exit 1; }
     cd "$HOME" || exit
@@ -75,41 +75,12 @@ start_miner() {
     echo "Starting Miner... Remember to Register your hotkey on network $network"
     countdown 5
     cd "$HOME/SubVortex/" || exit
-    
-    # Use expect to interact with btcli command for new_coldkey
-    coldkey_output=$(expect -c "
-        spawn btcli w new_coldkey >/dev/null
-        expect \"The mnemonic to the new coldkey is:\"
-        set coldkey_output \$expect_out(buffer)
-        puts \$coldkey_output
-        expect eof
-    ")
-
-    # Append output to WALLETBACKUP file for new_coldkey
-    echo "Creating a new ColdWallet..." >> "$WALLETBACKUP"
-    echo "$coldkey_output" >> "$WALLETBACKUP"
-
-    # Use expect to interact with btcli command for new_hotkey
-    hotkey_output=$(expect -c "
-        spawn btcli w new_hotkey >/dev/null
-        expect \"The mnemonic to the new hotkey is:\"
-        set hotkey_output \$expect_out(buffer)
-        puts \$hotkey_output
-        expect eof
-    ")
-
-    # Append output to WALLETBACKUP file for new_hotkey
-    echo "Creating a new HotKey..." >> "$WALLETBACKUP"
-    echo "$hotkey_output" >> "$WALLETBACKUP"
-
+    echo "Creating a new ColdWallet..."
+    btcli w new_coldkey
+    echo "Creating a new HotKey..."
+    btcli w new_hotkey
     pm2 start neurons/miner.py --name "$MINERNAME" --interpreter python3 -- --netuid "$network" --subtensor.network local --wallet.name "$WALLETNAME" --wallet.hotkey "$HOTKEY" --logging.debug || { echo "Failed to start miner"; exit 1; }
 }
-
-# Define the wallet backup file path
-WALLETBACKUP="$HOME/WALLETBACKUP.txt"
-
-# Clear the WALLETBACKUP file or create it if it doesn't exist
-> "$WALLETBACKUP"
 
 # Main installation process
 install_subvortex
@@ -130,23 +101,9 @@ fi
 # Prompt for ColdWallet creation
 if prompt_yes_no "Do you want to create a new ColdWallet?"; then
     # Call start_miner function
-    start_miner "$network" "$WALLETNAME" "$HOTKEY" "$MINERNAME"
+    start_miner "$network"
 fi
 
 # Prompt for HotKey creation
 if prompt_yes_no "Do you want to create a new HotKey?"; then
-    # Call start_miner function
-    start_miner "$network" "$WALLETNAME" "$HOTKEY" "$MINERNAME"
-fi
-
-# Prompt for starting miner
-if prompt_yes_no "Do you want to start miner?"; then
-    # Prompt for WALLETNAME
-    read -p "Please enter WALLETNAME: " WALLETNAME
-    # Prompt for HOTKEYNAME
-    read -p "Please enter HOTKEYNAME: " HOTKEY
-    # Prompt for MINERNAME
-    read -p "Please enter miner name: " MINERNAME
-    # Call start_miner function
-    start_miner "$network" "$WALLETNAME" "$HOTKEY" "$MINERNAME"
-fi
+    #
