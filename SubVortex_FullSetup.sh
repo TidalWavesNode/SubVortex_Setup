@@ -115,9 +115,9 @@ create_hotkey
 # Prompt for starting miner
 if prompt_yes_no "Do you want to start miner?"; then
     # Prompt for WALLETNAME
-    read -p "Please enter WALLETNAME: " WALLETNAME
+    read -p "Please enter the COLD WALLET NAME: " WALLETNAME
     # Prompt for HOTKEYNAME
-    read -p "Please enter HOTKEYNAME: " HOTKEY
+    read -p "Please enter the HOTKEY NAME: " HOTKEY
     # Prompt for MINERNAME
     read -p "Please enter miner name: " MINERNAME
     # Call start_miner function
